@@ -1,13 +1,13 @@
 #!/usr/bin/env drush
-
+<?php
 // -------------------------------------------------------
 // Configuration
 // -------------------------------------------------------
  
-$dir_drupal = "demo";
+$dir_drupal = "";
 $dir_theme = "demo/sites/all/themes";
 $file_make = "coriolanus.make";
-<?php
+
 $db_user = "root";
 $db_pass = "dev";
 $db_name = "demo";
@@ -23,6 +23,11 @@ $account_email = "localhost@localhost.com";
 // Make
 // -------------------------------------------------------
 
+$dir_drupal = drush_get_option('dir_drupal');
+if (empty($dir_drupal)) {
+    $dir_drupal = drush_prompt(dt('Name Drupal folder:'), NULL, TRUE, FALSE);
+}
+// Trigger drush
 $drush_make = "drush make -v $file_make $dir_drupal";
 
 if (drush_shell_exec($drush_make)) {
