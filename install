@@ -37,6 +37,7 @@ $drush_make = "drush make -v $file_make $dir_drupal";
 
 if (drush_shell_exec($drush_make)) {
     drush_print("Download Drupal and its components ...");
+    drush_print('------------------------------------------');
     drush_log('SUCCESS -- Folder created: '.$dir_drupal, 'ok');
 } else {
     drush_shell_exec_output();
@@ -50,7 +51,8 @@ if (drush_shell_exec($drush_make)) {
 $site_install = "drush site-install standard --account-name=%s --account-pass=%s --account-mail=%s --site-name=%s --db-url=mysql://%s:%s@localhost/%s -y";
 
 if (drush_shell_cd_and_exec($dir_drupal, $site_install, $account_name, $account_pass, $account_email, $site_name, $db_user, $db_pass, $db_name, $site_name )) {
-drush_log('SUCCESS -- Install Succeeded', 'ok');
+drush_print('Please wait a few moments...');
+drush_log('SUCCESS -- Drupal was installed', 'ok');
 }
 else{
 drush_shell_exec_output();
@@ -59,9 +61,35 @@ exit(0);
 }
 
 // -------------------------------------------------------
-// Enable modules
+// Enable desired modules
+// -------------------------------------------------------
+$modules_to_enable = "ctools views views_ui";
+$drush_en = "drush en $modules_to_enable -y";
+
+if (drush_shell_cd_and_exec($dir_drupal, $drush_en)) {
+    drush_shell_exec_output();
+    drush_log('SUCCESS -- Enabling some modules: '.$modules_to_enable, 'ok');
+} else {
+    drush_shell_exec_output();
+    drush_log('FAIL -- Modules enabling', 'error');
+    exit(0);
+}
+// -------------------------------------------------------
+// Disable desired modules
 // -------------------------------------------------------
 
-// -------------------------------------------------------
-// Disable modules
-// -------------------------------------------------------
+$modules_to_disable = "update";
+$drush_en = "drush dis $modules_to_disable -y";
+
+if (drush_shell_cd_and_exec($dir_drupal, $drush_dis)) {
+    drush_shell_exec_output();
+    drush_log('SUCCESS -- Disabling modules: '.$modules_to_disable, 'ok');
+} else {
+    drush_shell_exec_output();
+    drush_log('FAIL -- Modules enabling', 'error');
+    exit(0);
+}
+
+
+
+drush_print('Done.');

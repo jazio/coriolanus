@@ -3,7 +3,7 @@
 Coriolanus
 ==============================================
 
-Drupal Installer. It installs the latest Drupal version plus a customizable list of modules.
+Drupal PHP Installer. It installs the latest Drupal version plus a customizable list of modules.
 
 Before you get started:
 -----------------------------------------------
