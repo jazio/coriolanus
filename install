@@ -1,0 +1,67 @@
+#!/usr/bin/env drush
+<?php
+// -------------------------------------------------------
+// Configuration
+// -------------------------------------------------------
+ 
+$dir_drupal = "";
+$dir_theme = $dir_drupal."/sites/all/themes";
+$file_make = "coriolanus.make";
+
+$db_user = "root";
+$db_pass = "dev";
+$db_name = "demo";
+ 
+$site_name = "Demo Website";
+$shortname = "demo";
+
+$account_name = "admin";
+$account_pass = "pass";
+$account_email = "localhost@localhost.me";
+// -------------------------------------------------------
+// Verbosity
+// -------------------------------------------------------
+drush_print('CORIOLANUS, Drupal Install Script 0.1');
+drush_print('@author Ovi Farcas, http://www.jazio.net 2014');
+
+// -------------------------------------------------------
+// Make
+// -------------------------------------------------------
+
+$dir_drupal = drush_get_option('dir_drupal');
+if (empty($dir_drupal)) {
+    $dir_drupal = drush_prompt(dt('Your Drupal folder'), NULL, TRUE, FALSE);
+}
+// Trigger drush
+$drush_make = "drush make -v $file_make $dir_drupal";
+
+if (drush_shell_exec($drush_make)) {
+    drush_print("Download Drupal and its components ...");
+    drush_log('SUCCESS -- Folder created: '.$dir_drupal, 'ok');
+} else {
+    drush_shell_exec_output();
+    drush_log('FAIL -- drush make', 'error');
+    exit(0);
+}
+
+// -------------------------------------------------------
+// Install Drupal
+// -------------------------------------------------------
+$site_install = "drush site-install standard --account-name=%s --account-pass=%s --account-mail=%s --site-name=%s --db-url=mysql://%s:%s@localhost/%s -y";
+
+if (drush_shell_cd_and_exec($dir_drupal, $site_install, $account_name, $account_pass, $account_email, $site_name, $db_user, $db_pass, $db_name, $site_name )) {
+drush_log('SUCCESS -- Install Succeeded', 'ok');
+}
+else{
+drush_shell_exec_output();
+drush_log('FAIL -- Drupal installation', 'error');
+exit(0);
+}
+
+// -------------------------------------------------------
+// Enable modules
+// -------------------------------------------------------
+
+// -------------------------------------------------------
+// Disable modules
+// -------------------------------------------------------
