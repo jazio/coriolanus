@@ -3,7 +3,7 @@
 // -------------------------------------------------------
 // Configuration
 // -------------------------------------------------------
- 
+
 $dir_drupal = "";
 $dir_theme = $dir_drupal."/sites/all/themes";
 $file_make = "coriolanus.make";
@@ -11,13 +11,13 @@ $file_make = "coriolanus.make";
 $db_user = "root";
 $db_pass = "dev";
 $db_name = "demo";
- 
+
 $site_name = "Demo Website";
 $shortname = "demo";
 
-$account_name = "admin";
-$account_pass = "pass";
-$account_email = "localhost@localhost.me";
+//$account_name = "admin";
+//$account_pass = "pass";
+//$account_email = "localhost@localhost.me";
 // -------------------------------------------------------
 // Verbosity
 // -------------------------------------------------------
@@ -28,10 +28,22 @@ drush_print('@author Ovi Farcas, http://www.jazio.net 2014');
 // Make
 // -------------------------------------------------------
 
-$dir_drupal = drush_get_option('dir_drupal');
-if (empty($dir_drupal)) {
-    $dir_drupal = drush_prompt(dt('Your Drupal folder'), NULL, TRUE, FALSE);
+$db_user = drush_get_option('db_user');
+if (empty($db_user)) {
+    $db_user = drush_prompt(dt('Your Mysql user'), NULL, TRUE, FALSE);
 }
+
+$db_pass = drush_get_option('db_pass');
+if (empty($db_pass)) {
+    $db_user = drush_prompt(dt('Your Mysql pass'), NULL, TRUE, FALSE);
+}
+
+$db_email = drush_get_option('db_email');
+if (empty($db_email)) {
+    $db_user = drush_prompt(dt('Your Mysql email'), NULL, TRUE, FALSE);
+}
+
+
 // Trigger drush
 $drush_make = "drush make -v $file_make $dir_drupal";
 
@@ -44,7 +56,13 @@ if (drush_shell_exec($drush_make)) {
     drush_log('FAIL -- drush make', 'error');
     exit(0);
 }
-
+// -------------------------------------------------------
+// Database creation
+// -------------------------------------------------------
+$dir_drupal = drush_get_option('dir_drupal');
+if (empty($dir_drupal)) {
+    $dir_drupal = drush_prompt(dt('Your Drupal folder'), NULL, TRUE, FALSE);
+}
 // -------------------------------------------------------
 // Install Drupal
 // -------------------------------------------------------
